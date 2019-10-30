@@ -2,4 +2,4 @@
 
 declare(strict_types=1);
 
-require "./blog/vendor/autoload.php";
+require dirname(__DIR__)."/vendor/autoload.php";
