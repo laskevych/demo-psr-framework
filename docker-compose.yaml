@@ -1,0 +1,28 @@
+version: '3'
+services:
+  blog-nginx:
+    build:
+      context: ./blog/docker
+      dockerfile: nginx.docker
+    volumes:
+      - ./blog:/app
+    depends_on:
+      - blog-php-fpm
+    ports:
+      - "8090:80"
+  blog-php-fpm:
+    build:
+      context: ./blog/docker
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./blog:/app
+  blog-php-cli:
+    build:
+      context: ./blog/docker
+      dockerfile: php-cli.docker
+    volumes:
+      - ./blog:/app
+      - composer:/root/.composer/cache
+
+volumes:
+  composer:

@@ -1,0 +1,27 @@
+{
+    "name": "laskevych/blog",
+    "description": "This project is a Blog. App developed on the clear PHP.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+          "name": "Andrew Laskevych",
+          "email": "an.laskevych@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    }
+
+}
