@@ -9,7 +9,10 @@
           "email": "an.laskevych@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "webmozart/assert": "^1.5",
+        "ramsey/uuid": "^3.8"
+    },
     "require-dev": {
         "phpunit/phpunit": "^8.4"
     },
