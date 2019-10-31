@@ -1,17 +1,14 @@
 {
-    "name": "laskevych/blog",
-    "description": "This project is a Blog. App developed on the clear PHP.",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-          "name": "Andrew Laskevych",
-          "email": "an.laskevych@gmail.com"
-        }
-    ],
+    "config": {
+        "sort-packages": true
+    },
     "require": {
+        "php": ">=7.3.0",
+        "psr/http-message": "^1.0",
+        "ramsey/uuid": "^3.8",
         "webmozart/assert": "^1.5",
-        "ramsey/uuid": "^3.8"
+        "zendframework/zend-diactoros": "^2.1",
+        "zendframework/zend-httphandlerrunner": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.4"
