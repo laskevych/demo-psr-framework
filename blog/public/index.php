@@ -15,6 +15,7 @@ require dirname(__DIR__)."/vendor/autoload.php";
 ### Initialization
 
 $routes = new RouteCollection();
+$resolver = new \App\Core\Http\ActionResolver();
 
 $routes->get('home', '/', function (ServerRequestInterface $request) {
    $name = $request->getQueryParams()['name'] ?? 'Guest';
@@ -47,7 +48,8 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $action = $result->getHandler();
+    $handler = $result->getHandler();
+    $action = $resolver->resolse($handler);
     $response = $action($request);
 } catch (RequestNotMatchedException $e) {
     $response = new JsonResponse(['error' => 'Undefined page'], 404);
