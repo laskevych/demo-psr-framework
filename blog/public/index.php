@@ -2,40 +2,60 @@
 
 declare(strict_types=1);
 
-use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\{HtmlResponse, JsonResponse};
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use App\Core\Http\Router\RouteCollection;
+use Psr\Http\Message\ServerRequestInterface;
+use App\Core\Http\Router\Router;
+use App\Core\Http\Router\Exception\RequestNotMatchedException;
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
 ### Initialization
 
+$routes = new RouteCollection();
+
+$routes->get('home', '/', function (ServerRequestInterface $request) {
+   $name = $request->getQueryParams()['name'] ?? 'Guest';
+   return new HtmlResponse('Hello, '. $name . '!');
+});
+
+$routes->get('index_blog', '/blog', function () {
+    return new JsonResponse([
+        ['id' => 1, 'title' => 'The First Post'],
+        ['id' => 2, 'title' => 'The Second Post'],
+    ]);
+}, ['id' => '\d+', 'title' => '']);
+
+$routes->get('show_blog', '/blog/{id}', function (ServerRequestInterface $request) {
+    $id = $request->getAttribute('id');
+
+    return new JsonResponse([
+        ['id' => $id, 'title' => "Post #$id"]
+    ]);
+}, ['id' => '\d+']);
+
+$route = new Router($routes);
+//var_dump($route->getRoutes());
+//die();
 $request = ServerRequestFactory::fromGlobals();
 
-$path = $request->getUri()->getPath();
-
-if ($path == '/') {
-    $name = $request->getQueryParams()['name'] ?? 'Guest';
-    $response = (new HtmlResponse('Hello, '. $name . '!'));
-} elseif ($path === '/about') {
-    $response = new HtmlResponse('Simple About');
-} else {
-    $response = new \Zend\Diactoros\Response\JsonResponse(['error' => 'Undefined page'], 404);
+### Running
+try {
+    $result = $route->match($request);
+    foreach ($result->getAttributes() as $attribute => $value) {
+        $request = $request->withAttribute($attribute, $value);
+    }
+    $action = $result->getHandler();
+    $response = $action($request);
+} catch (RequestNotMatchedException $e) {
+    $response = new JsonResponse(['error' => 'Undefined page'], 404);
 }
-
-### Preprocessing
-// TODO:
-//if (preg_match('/json/i', $request->getHeaderLine('Content-Type'))) {
-//    $request = $request->withParsedBody(json_decode($request->getBody()->getContents()));
-//}
-
-### Action
-
-
 
 ### Postprocessing
 
-$response = $response->withHeader('X-Test', 'Hello');
+$response = $response->withHeader('X-Developer', 'A. Laskevych');
 
 ### Sending
 
