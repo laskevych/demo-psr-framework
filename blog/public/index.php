@@ -38,8 +38,6 @@ $routes->get('show_blog', '/blog/{id}', function (ServerRequestInterface $reques
 }, ['id' => '\d+']);
 
 $route = new Router($routes);
-//var_dump($route->getRoutes());
-//die();
 $request = ServerRequestFactory::fromGlobals();
 
 ### Running

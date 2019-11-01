@@ -44,12 +44,4 @@ class Router
 
         throw new RouteNotFoundException($name, $params);
     }
-
-    /**
-     * @return RouteCollection
-     */
-    public function getRoutes(): RouteCollection
-    {
-        return $this->routes;
-    }
 }
