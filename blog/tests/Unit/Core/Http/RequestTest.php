@@ -16,4 +16,13 @@ class RequestTest extends TestCase
         self::assertEquals($url, $request->getUri());
         self::assertEquals('GET', $request->getMethod());
     }
+
+    public function testPath()
+    {
+        $request = new Request($url = 'http://localhost.com/about');
+
+        self::assertEquals($url, $request->getUri());
+        self::assertEquals('GET', $request->getMethod());
+        self::assertEquals('/about', $request->getUri()->getPath());
+    }
 }
