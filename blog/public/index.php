@@ -21,6 +21,13 @@ $map = $aura->getMap();
 $map->get('home', '/', Action\HomeAction::class);
 $map->get('about', '/about', Action\AboutAction::class);
 
+$map->get('profiler', '/profiler', function (\Psr\Http\Message\ServerRequestInterface $request) {
+   $profiler = new \App\Http\Middleware\ProfilerMiddleware();
+   $about = new Action\AboutAction();
+
+   return $profiler($request, $about);
+});
+
 $router = new AuraRouterAdapter($aura);
 $resolver = new ActionResolver();
 
