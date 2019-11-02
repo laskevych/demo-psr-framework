@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Http\Router\Route;
+namespace Core\Http\Router\Route;
 
-use App\Core\Http\Router\Result;
-use Psr\Http\Message\RequestInterface;
+use Core\Http\Router\Result;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RegexpRoute implements RouteInterface
@@ -27,11 +26,13 @@ class RegexpRoute implements RouteInterface
     }
 
     /**
-     * GRASP - Information Expert - все данные для роутинга у нас тут, потому методы для проверок пишем тут а не в классе Router
-     * Route сам решает подходит ли он для выполнения задачи
+     * GRASP(Information Expert) - все данные в этом классе, потому методы для проверок пишем тут, а не в классе SimpleRouter.
+     * RegexpRoute сам решает подходит ли он для выполнения задачи.
      * Проходит все машруты проверяет если метод совпадает, то идем дальше.
      * Дальше на основе шаблона мы создаем регулярное выражение и дальше парсим урл по этому выражению.
-     * В роутах мы пишем blog/{id}/{slug}, а он все перепарсивает.
+     * В роутах мы пишем blog/{id}/{slug}, а он все спарсит.
+     * @param ServerRequestInterface $request
+     * @return Result|null
      */
     public function match(ServerRequestInterface $request): ?Result
     {
@@ -59,8 +60,10 @@ class RegexpRoute implements RouteInterface
     }
 
     /**
-     * GRASP - Information Expert - все данные для роутинга у нас тут, потому методы для проверок пишем тут а не в классе Router
-     * Route сам решает подходит ли он для выполнения задачи
+     * GRASP(Information Expert) - все данные в этом классе, потому методы для проверок пишем тут, а не в классе SimpleRouter.
+     * @param string $name
+     * @param array $params
+     * @return string|null
      */
     public function generate(string $name, array $params = []): ?string
     {

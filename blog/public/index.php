@@ -5,17 +5,17 @@ declare(strict_types=1);
 use Zend\Diactoros\Response\{HtmlResponse, JsonResponse};
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
-use App\Core\Http\Router\RouteCollection;
+use Core\Http\Router\RouteCollection;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Core\Http\Router\Router;
-use App\Core\Http\Router\Exception\RequestNotMatchedException;
+use Core\Http\Router\SimpleRouter;
+use Core\Http\Router\Exception\RequestNotMatchedException;
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
 ### Initialization
 
 $routes = new RouteCollection();
-$resolver = new \App\Core\Http\ActionResolver();
+$resolver = new \Core\Http\ActionResolver();
 
 $routes->get('home', '/', function (ServerRequestInterface $request) {
    $name = $request->getQueryParams()['name'] ?? 'Guest';
@@ -37,7 +37,7 @@ $routes->get('show_blog', '/blog/{id}', function (ServerRequestInterface $reques
     ]);
 }, ['id' => '\d+']);
 
-$route = new Router($routes);
+$route = new SimpleRouter($routes);
 $request = ServerRequestFactory::fromGlobals();
 
 ### Running

@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Http\Router;
+namespace Core\Http\Router;
 
+use Core\Http\Router\Route\RouteInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Core\Http\Router\Exception\{RequestNotMatchedException, RouteNotFoundException};
+use Core\Http\Router\Exception\{RequestNotMatchedException, RouteNotFoundException};
 
-class Router
+class SimpleRouter implements RouteInterface
 {
     private $routes;
 

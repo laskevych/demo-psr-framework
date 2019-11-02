@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Tests\Unit\Model\Comment;
+namespace Tests\Unit\Model\Comment;
 
 use App\Model\Comment\{Id, Comment};
 use App\Model\User\User;
-use App\Tests\Builder\Post\PostBuilder;
+use Tests\Builder\Post\PostBuilder;
 use PHPUnit\Framework\TestCase;
 
 class CommentTest extends TestCase

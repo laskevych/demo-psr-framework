@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Http\Router\Exception;
+namespace Core\Http\Router\Exception;
 
 use Psr\Http\Message\RequestInterface;
 

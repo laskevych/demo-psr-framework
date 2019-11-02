@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Builder\Post;
+namespace Tests\Builder\Post;
 
 use App\Model\Post\Id;
 use App\Model\Post\Post;
