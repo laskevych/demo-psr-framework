@@ -4,33 +4,31 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Http;
 
+use Aura\Router\RouterContainer;
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\{ServerRequest, Uri};
-use Core\Http\Router\{Exception\RequestNotMatchedException,
-    Exception\RouteNotFoundException,
-    SimpleRouter,
-    RouteCollection};
+use Core\Http\Router\{AuraRouterAdapter, Exception\RequestNotMatchedException, Exception\RouteNotFoundException};
 
 class RouterTest extends TestCase
 {
     public function testCorrectMethod(): void
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $map = $aura->getMap();
 
-        $routes->get(
+        $map->get(
             $nameGet = 'blog_show',
             $path = '/blog/{id}',
-            $handlerGet = 'handler_get',
-            $tokens = ['id' => '\d+']
-        );
+            $handlerGet = 'handler_get'
+        )->tokens($tokens = ['id' => '\d+']);
 
-        $routes->post(
+        $map->post(
             $namePost = 'blog_edit',
             $path = '/blog/edit/{id}',
             $handlerPost = 'handler_post'
         );
 
-        $router = new SimpleRouter($routes);
+        $router = new AuraRouterAdapter($aura);
 
         $result = $router->match($this->buildRequest('GET', '/blog/45'));
         self::assertEquals($nameGet, $result->getName());
@@ -43,15 +41,16 @@ class RouterTest extends TestCase
 
     public function testMissingMethod(): void
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $map = $aura->getMap();
 
-        $routes->get(
+        $map->get(
             $nameGet = 'blog',
             $path = '/blog',
             $handlerGet = 'handler_get'
         );
 
-        $router = new SimpleRouter($routes);
+        $router = new AuraRouterAdapter($aura);
 
         $this->expectException(RequestNotMatchedException::class);
 
@@ -60,16 +59,16 @@ class RouterTest extends TestCase
 
     public function testReturnCorrectArgument(): void
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $map = $aura->getMap();
 
-        $routes->get(
+        $map->get(
             $nameGet = 'blog_show',
             $path = '/blog/{id}',
-            $handlerGet = 'handler_get_show',
-            $tokens = ['id' => '\d+']
-        );
+            $handlerGet = 'handler_get_show'
+        )->tokens(['id' => '\d+']);
 
-        $router = new SimpleRouter($routes);
+        $router = new AuraRouterAdapter($aura);
 
         $result = $router->match($this->buildRequest('GET', '/blog/7'));
 
@@ -79,16 +78,16 @@ class RouterTest extends TestCase
 
     public function testRouteGenerate(): void
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $map = $aura->getMap();
 
-        $routes->get(
+        $map->get(
             $nameGet = 'blog_show',
             $path = '/blog/{id}',
-            $handlerGet = 'handler_get',
-            $tokens = ['id' => '\d+']
-        );
+            $handlerGet = 'handler_get'
+        )->tokens(['id' => '\d+']);
 
-        $router = new SimpleRouter($routes);
+        $router = new AuraRouterAdapter($aura);
 
         $url = $router->generate('blog_show', ['id' => 15]);
         self::assertEquals('/blog/15', $url);
@@ -97,16 +96,16 @@ class RouterTest extends TestCase
 
     public function testRouteNotFound(): void
     {
-        $routes = new RouteCollection();
+        $aura = new RouterContainer();
+        $map = $aura->getMap();
 
-        $routes->get(
+        $map->get(
             $nameGet = 'blog_show',
             $path = '/blog/{id}',
-            $handlerGet = 'handler_get',
-            $tokens = ['id' => '\d+']
-        );
+            $handlerGet = 'handler_get'
+        )->tokens(['id' => '\d+']);
 
-        $router = new SimpleRouter($routes);
+        $router = new AuraRouterAdapter($aura);
 
         $this->expectException(RouteNotFoundException::class);
         $result = $router->generate('blog', ['id' => 15]);
