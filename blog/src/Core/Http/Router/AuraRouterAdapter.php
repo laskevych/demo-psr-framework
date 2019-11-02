@@ -7,10 +7,9 @@ namespace Core\Http\Router;
 use Aura\Router\Exception\RouteNotFound;
 use Aura\Router\RouterContainer;
 use Core\Http\Router\Exception\{RequestNotMatchedException, RouteNotFoundException};
-use Core\Http\Router\Route\RouteInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class AuraRouterAdapter implements RouteInterface
+class AuraRouterAdapter implements RouterInterface
 {
     private $aura;
 
@@ -19,7 +18,7 @@ class AuraRouterAdapter implements RouteInterface
         $this->aura = $aura;
     }
 
-    public function match(ServerRequestInterface $request): ?Result
+    public function match(ServerRequestInterface $request): Result
     {
         $matcher = $this->aura->getMatcher();
         if ($route = $matcher->match($request)) {
@@ -29,7 +28,7 @@ class AuraRouterAdapter implements RouteInterface
         throw new RequestNotMatchedException($request);
     }
 
-    public function generate(string $name, array $params = []): ?string
+    public function generate(string $name, array $params = []): string
     {
         $generator = $this->aura->getGenerator();
         try {
