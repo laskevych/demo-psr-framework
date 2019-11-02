@@ -6,7 +6,7 @@ namespace Core\Http;
 
 class ActionResolver
 {
-    public function resolse($handler): callable
+    public function resolve($handler): callable
     {
         return \is_string($handler) ? new $handler() : $handler;
     }

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Core\Http\Router;
 
+use Core\Http\Router\Route\RouteInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Core\Http\Router\Exception\{RequestNotMatchedException, RouteNotFoundException};
 
-class Router
+class SimpleRouter implements RouteInterface
 {
     private $routes;
 
@@ -28,7 +29,7 @@ class Router
     }
 
     /**
-     * Проходимс по маршрутам. Ищем по имени.
+     * Проходим по маршрутам. Ищем по имени.
      * Дальше по ругулярке заменяем все переданные значения и фомируем урл.
      * @param string $name
      * @param array $params

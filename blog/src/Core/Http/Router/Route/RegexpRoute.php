@@ -27,7 +27,7 @@ class RegexpRoute implements RouteInterface
     }
 
     /**
-     * GRASP - Information Expert - все данные для роутинга у нас тут, потому методы для проверок пишем тут а не в классе Router
+     * GRASP - Information Expert - все данные для роутинга у нас тут, потому методы для проверок пишем тут а не в классе RouterInterface
      * Route сам решает подходит ли он для выполнения задачи
      * Проходит все машруты проверяет если метод совпадает, то идем дальше.
      * Дальше на основе шаблона мы создаем регулярное выражение и дальше парсим урл по этому выражению.
@@ -59,7 +59,7 @@ class RegexpRoute implements RouteInterface
     }
 
     /**
-     * GRASP - Information Expert - все данные для роутинга у нас тут, потому методы для проверок пишем тут а не в классе Router
+     * GRASP - Information Expert - все данные для роутинга у нас тут, потому методы для проверок пишем тут а не в классе RouterInterface
      * Route сам решает подходит ли он для выполнения задачи
      */
     public function generate(string $name, array $params = []): ?string

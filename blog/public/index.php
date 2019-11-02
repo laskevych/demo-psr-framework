@@ -5,49 +5,35 @@ declare(strict_types=1);
 use Zend\Diactoros\Response\{HtmlResponse, JsonResponse};
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
-use Core\Http\Router\RouteCollection;
-use Psr\Http\Message\ServerRequestInterface;
-use Core\Http\Router\Router;
 use Core\Http\Router\Exception\RequestNotMatchedException;
 use App\Http\Action;
+use Core\Http\Router\AuraRouterAdapter;
+use Core\Http\ActionResolver;
+use Aura\Router\RouterContainer;
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
 ### Initialization
 
-$aura = new \Aura\Router\RouterContainer();
+$aura = new RouterContainer();
 $map = $aura->getMap();
 
 $map->get('home', '/', Action\HomeAction::class);
+$map->get('about', '/about', Action\AboutAction::class);
 
-//$routes->get('index_blog', '/blog', function () {
-//    return new JsonResponse([
-//        ['id' => 1, 'title' => 'The First Post'],
-//        ['id' => 2, 'title' => 'The Second Post'],
-//    ]);
-//}, ['id' => '\d+', 'title' => '']);
-//
-//$routes->get('show_blog', '/blog/{id}', function (ServerRequestInterface $request) {
-//    $id = $request->getAttribute('id');
-//
-//    return new JsonResponse([
-//        ['id' => $id, 'title' => "Post #$id"]
-//    ]);
-//}, ['id' => '\d+']);
+$router = new AuraRouterAdapter($aura);
+$resolver = new ActionResolver();
 
 $request = ServerRequestFactory::fromGlobals();
 
 ### Running
 try {
-
-    $matcher = $aura->getMatcher();
-
-    $result = $matcher->match($request);
+    $result = $router->match($request);
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
     $handler = $result->getHandler();
-    $action = $resolver->resolse($handler);
+    $action = $resolver->resolve($handler);
     $response = $action($request);
 } catch (RequestNotMatchedException $e) {
     $response = new JsonResponse(['error' => 'Undefined page'], 404);

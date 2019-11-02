@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\{ServerRequest, Uri};
 use Core\Http\Router\{Exception\RequestNotMatchedException,
     Exception\RouteNotFoundException,
-    Router,
+    SimpleRouter,
     RouteCollection};
 
 class RouterTest extends TestCase
@@ -30,7 +30,7 @@ class RouterTest extends TestCase
             $handlerPost = 'handler_post'
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $result = $router->match($this->buildRequest('GET', '/blog/45'));
         self::assertEquals($nameGet, $result->getName());
@@ -51,7 +51,7 @@ class RouterTest extends TestCase
             $handlerGet = 'handler_get'
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $this->expectException(RequestNotMatchedException::class);
 
@@ -69,7 +69,7 @@ class RouterTest extends TestCase
             $tokens = ['id' => '\d+']
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $result = $router->match($this->buildRequest('GET', '/blog/7'));
 
@@ -88,7 +88,7 @@ class RouterTest extends TestCase
             $tokens = ['id' => '\d+']
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $url = $router->generate('blog_show', ['id' => 15]);
         self::assertEquals('/blog/15', $url);
@@ -106,7 +106,7 @@ class RouterTest extends TestCase
             $tokens = ['id' => '\d+']
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $this->expectException(RouteNotFoundException::class);
         $result = $router->generate('blog', ['id' => 15]);
