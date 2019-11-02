@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Http\Router;
+namespace Core\Http\Router;
 
-use App\Core\Http\Router\Route\RegexpRoute;
-use App\Core\Http\Router\Route\RouteInterface;
+use Core\Http\Router\Route\RegexpRoute;
+use Core\Http\Router\Route\RouteInterface;
 
 class RouteCollection
 {

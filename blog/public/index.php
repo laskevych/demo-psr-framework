@@ -5,44 +5,44 @@ declare(strict_types=1);
 use Zend\Diactoros\Response\{HtmlResponse, JsonResponse};
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
-use App\Core\Http\Router\RouteCollection;
+use Core\Http\Router\RouteCollection;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Core\Http\Router\Router;
-use App\Core\Http\Router\Exception\RequestNotMatchedException;
+use Core\Http\Router\Router;
+use Core\Http\Router\Exception\RequestNotMatchedException;
+use App\Http\Action;
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
 ### Initialization
 
-$routes = new RouteCollection();
-$resolver = new \App\Core\Http\ActionResolver();
+$aura = new \Aura\Router\RouterContainer();
+$map = $aura->getMap();
 
-$routes->get('home', '/', function (ServerRequestInterface $request) {
-   $name = $request->getQueryParams()['name'] ?? 'Guest';
-   return new HtmlResponse('Hello, '. $name . '!');
-});
+$map->get('home', '/', Action\HomeAction::class);
 
-$routes->get('index_blog', '/blog', function () {
-    return new JsonResponse([
-        ['id' => 1, 'title' => 'The First Post'],
-        ['id' => 2, 'title' => 'The Second Post'],
-    ]);
-}, ['id' => '\d+', 'title' => '']);
+//$routes->get('index_blog', '/blog', function () {
+//    return new JsonResponse([
+//        ['id' => 1, 'title' => 'The First Post'],
+//        ['id' => 2, 'title' => 'The Second Post'],
+//    ]);
+//}, ['id' => '\d+', 'title' => '']);
+//
+//$routes->get('show_blog', '/blog/{id}', function (ServerRequestInterface $request) {
+//    $id = $request->getAttribute('id');
+//
+//    return new JsonResponse([
+//        ['id' => $id, 'title' => "Post #$id"]
+//    ]);
+//}, ['id' => '\d+']);
 
-$routes->get('show_blog', '/blog/{id}', function (ServerRequestInterface $request) {
-    $id = $request->getAttribute('id');
-
-    return new JsonResponse([
-        ['id' => $id, 'title' => "Post #$id"]
-    ]);
-}, ['id' => '\d+']);
-
-$route = new Router($routes);
 $request = ServerRequestFactory::fromGlobals();
 
 ### Running
 try {
-    $result = $route->match($request);
+
+    $matcher = $aura->getMatcher();
+
+    $result = $matcher->match($request);
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }

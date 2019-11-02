@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Core\Http;
+namespace Tests\Unit\Core\Http;
 
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\{ServerRequest, Uri};
-use App\Core\Http\Router\{Exception\RequestNotMatchedException,
+use Core\Http\Router\{Exception\RequestNotMatchedException,
     Exception\RouteNotFoundException,
     Router,
     RouteCollection};

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Http\Router\Route;
+namespace Core\Http\Router\Route;
 
-use App\Core\Http\Router\Result;
+use Core\Http\Router\Result;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
