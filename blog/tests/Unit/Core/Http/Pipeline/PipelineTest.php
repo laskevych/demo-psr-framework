@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Http\Pipeline;
 
+use Core\Http\Pipeline\MiddlewareResolver;
 use Core\Http\Pipeline\Pipeline;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,9 +16,10 @@ class PipelineTest extends TestCase
     public function testPipe(): void
     {
         $pipeline = new Pipeline();
+        $resolver = new MiddlewareResolver();
 
-        $pipeline->pipe(new Middleware1());
-        $pipeline->pipe(new Middleware2());
+        $pipeline->pipe($resolver->resolve(Middleware1::class));
+        $pipeline->pipe($resolver->resolve(Middleware2::class));
 
         $response = $pipeline(new ServerRequest(), new Last());
 
