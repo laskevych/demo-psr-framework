@@ -6,10 +6,12 @@ use Zend\Diactoros\Response\{HtmlResponse, JsonResponse};
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 use Core\Http\Router\Exception\RequestNotMatchedException;
-use App\Http\Action;
+use App\Http\Action\{HomeAction, AboutAction};
 use Core\Http\Router\AuraRouterAdapter;
 use Core\Http\Pipeline\MiddlewareResolver;
 use Aura\Router\RouterContainer;
+use Core\Http\Application;
+use App\Http\Middleware\{NotFoundHandler, ProfilerMiddleware};
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
@@ -18,12 +20,12 @@ require dirname(__DIR__)."/vendor/autoload.php";
 $aura = new RouterContainer();
 $map = $aura->getMap();
 
-$map->get('home', '/', Action\HomeAction::class);
-$map->get('about', '/about', Action\AboutAction::class);
+$map->get('home', '/', HomeAction::class);
+$map->get('about', '/about', AboutAction::class);
 
 $router = new AuraRouterAdapter($aura);
-$app = new \Core\Http\Application(new MiddlewareResolver());
-$app->pipe(\App\Http\Middleware\ProfilerMiddleware::class);
+$app = new Application(new MiddlewareResolver(), new NotFoundHandler());
+$app->pipe(ProfilerMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
 
@@ -37,7 +39,8 @@ try {
     $app->pipe($handler);
 } catch (RequestNotMatchedException $e) {}
 
-$response = $app($request, new \App\Http\Middleware\NotFoundHandler());
+$response = $app->run($request);
+
 ### Postprocessing
 
 $response = $response->withHeader('X-Developer', 'A. Laskevych');
