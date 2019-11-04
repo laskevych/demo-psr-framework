@@ -11,11 +11,15 @@ use Core\Http\Router\AuraRouterAdapter;
 use Core\Http\Pipeline\MiddlewareResolver;
 use Aura\Router\RouterContainer;
 use Core\Http\Application;
-use App\Http\Middleware\{NotFoundHandler, ProfilerMiddleware};
+use App\Http\Middleware\{NotFoundHandler, ProfilerMiddleware, ErrorHandlerMiddleware};
+use Psr\Http\Message\ServerRequestInterface;
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
 ### Initialization
+$params = [
+  'debug' => true
+];
 
 $aura = new RouterContainer();
 $map = $aura->getMap();
@@ -25,9 +29,19 @@ $map->get('about', '/about', AboutAction::class);
 
 $router = new AuraRouterAdapter($aura);
 $app = new Application(new MiddlewareResolver(), new NotFoundHandler());
-$app->pipe(ProfilerMiddleware::class);
-
 $request = ServerRequestFactory::fromGlobals();
+
+$app->pipe(new ErrorHandlerMiddleware($params['debug']));
+
+$app->pipe(function (ServerRequestInterface $request, callable $next) {
+    /**
+     * @var \Psr\Http\Message\ResponseInterface $response
+     */
+    $response = $next($request);
+    return $response->withHeader('X-Developer', 'A. Laskevych');
+});
+
+$app->pipe(ProfilerMiddleware::class);
 
 ### Running
 try {
@@ -41,9 +55,6 @@ try {
 
 $response = $app->run($request);
 
-### Postprocessing
-
-$response = $response->withHeader('X-Developer', 'A. Laskevych');
 
 ### Sending
 
