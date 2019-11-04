@@ -22,9 +22,8 @@ $map->get('home', '/', Action\HomeAction::class);
 $map->get('about', '/about', Action\AboutAction::class);
 
 $router = new AuraRouterAdapter($aura);
-$resolver = new MiddlewareResolver();
-$pipeline = new \Core\Http\Pipeline\Pipeline();
-$pipeline->pipe($resolver->resolve(\App\Http\Middleware\ProfilerMiddleware::class));
+$app = new \Core\Http\Application(new MiddlewareResolver());
+$app->pipe(\App\Http\Middleware\ProfilerMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
 
@@ -35,10 +34,10 @@ try {
         $request = $request->withAttribute($attribute, $value);
     }
     $handler = $result->getHandler();
-    $pipeline->pipe($resolver->resolve($handler));
+    $app->pipe($handler);
 } catch (RequestNotMatchedException $e) {}
 
-$response = $pipeline($request, new \App\Http\Middleware\NotFoundHandler());
+$response = $app($request, new \App\Http\Middleware\NotFoundHandler());
 ### Postprocessing
 
 $response = $response->withHeader('X-Developer', 'A. Laskevych');
