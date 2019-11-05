@@ -22,14 +22,16 @@ $params = [
 ];
 
 $aura = new RouterContainer();
-$map = $aura->getMap();
+$routes = $aura->getMap();
 
-$map->get('home', '/', HomeAction::class);
-$map->get('about', '/about', AboutAction::class);
+$routes->get('home', '/', HomeAction::class);
+$routes->get('about', '/about', AboutAction::class);
 
 $router = new AuraRouterAdapter($aura);
-$resolver = new MiddlewareResolver();
+
+$resolver = new MiddlewareResolver(new Response());
 $app = new Application($resolver, new NotFoundHandler());
+
 $app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(ProfilerMiddleware::class);
 $app->pipe(new RouteMiddleware($router));
@@ -46,7 +48,7 @@ $app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-$response = $app->run($request, new Response());
+$response = $app->handle($request);
 
 ### Sending
 

@@ -8,8 +8,10 @@ use Core\Http\Pipeline\MiddlewareResolver;
 use Core\Http\Router\Result;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class DispatchMiddleware
+class DispatchMiddleware implements MiddlewareInterface
 {
     private $resolver;
 
@@ -18,10 +20,10 @@ class DispatchMiddleware
         $this->resolver = $resolver;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /**
-         * Получаем $request, а в качестве $next - NotFoundHandler(404).
+         * Получаем $request, а в качестве $handler - NotFoundHandler(404).
          * Если мы его поставим последним в цепочке вызовов.
          * Если не определен Result::class в $result
          * Мы передаем все в NotFoundHandler и получим 404
@@ -32,10 +34,11 @@ class DispatchMiddleware
          * По сути это реализация SRP (SOLID).
          * @var Result $result
          */
+
         if (!$result = $request->getAttribute(Result::class)) {
-            return $next($request);
+            return $handler->handle($request);
         }
         $middleware = $this->resolver->resolve($result->getHandler());
-        return $middleware($request, $response, $next);
+        return $middleware->process($request, $handler);
     }
 }

@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use Core\Http\Router\Result;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
-class AboutNotFoundMiddleware
+class AboutNotFoundMiddleware implements MiddlewareInterface
 {
-    public function __invoke(ServerRequestInterface $request, callable $next)
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /**
          * @var Result $result
@@ -20,6 +24,6 @@ class AboutNotFoundMiddleware
             return new JsonResponse(['error'=>'about not work']);
         }
 
-        return $next($request);
+        return $handler->handle($request);
     }
 }

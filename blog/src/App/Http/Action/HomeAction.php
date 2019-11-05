@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Action;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
-class HomeAction
+class HomeAction implements RequestHandlerInterface
 {
-    public function __invoke(ServerRequestInterface $request)
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $name = $request->getQueryParams()['name'] ?? 'Guest';
         return new HtmlResponse('Hello, '. $name . '!');
