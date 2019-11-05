@@ -29,6 +29,7 @@ class MiddlewareResolver
 
         /**
          * Class Lazy Load
+         * @todo тут проблема. Он с Handler классов делает Middleware классы.
          */
         if (\is_string($handler)) {
             return new LazyMiddlewareDecorator($this);

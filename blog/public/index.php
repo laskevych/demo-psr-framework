@@ -24,8 +24,8 @@ $params = [
 $aura = new RouterContainer();
 $routes = $aura->getMap();
 
-$routes->get('home', '/', HomeAction::class);
-$routes->get('about', '/about', AboutAction::class);
+$routes->get('home', '/', new HomeAction());
+$routes->get('about', '/about', new AboutAction());
 
 $router = new AuraRouterAdapter($aura);
 

@@ -2,6 +2,7 @@ up: docker-up
 down: docker-dowm
 init: docker-dowm docker-pull docker-build docker-up
 test: blog-test
+test-cache: blog-test-cache
 
 docker-up:
 	docker-compose up -d
@@ -22,3 +23,6 @@ blog-composer-install:
 
 blog-test:
 	docker-compose run --rm blog-php-cli php vendor/bin/phpunit
+
+blog-test-cache:
+	docker-compose run --rm blog-php-cli rm -f .phpunit.result.cache
