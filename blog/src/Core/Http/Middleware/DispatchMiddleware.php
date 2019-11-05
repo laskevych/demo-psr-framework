@@ -6,6 +6,7 @@ namespace Core\Http\Middleware;
 
 use Core\Http\Pipeline\MiddlewareResolver;
 use Core\Http\Router\Result;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DispatchMiddleware
@@ -17,7 +18,7 @@ class DispatchMiddleware
         $this->resolver = $resolver;
     }
 
-    public function __invoke(ServerRequestInterface $request, callable $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         /**
          * Получаем $request, а в качестве $next - NotFoundHandler(404).
@@ -35,6 +36,6 @@ class DispatchMiddleware
             return $next($request);
         }
         $middleware = $this->resolver->resolve($result->getHandler());
-        return $middleware($request, $next);
+        return $middleware($request, $response, $next);
     }
 }

@@ -46,7 +46,7 @@ $app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-$response = $app->run($request, new \Zend\Diactoros\Response());
+$response = $app->run($request, new Response());
 
 ### Sending
 
