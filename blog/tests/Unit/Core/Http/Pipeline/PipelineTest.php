@@ -8,6 +8,7 @@ use Core\Http\Pipeline\MiddlewareResolver;
 use Core\Http\Pipeline\Pipeline;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequest;
 
@@ -21,7 +22,7 @@ class PipelineTest extends TestCase
         $pipeline->pipe($resolver->resolve(Middleware1::class));
         $pipeline->pipe($resolver->resolve(Middleware2::class));
 
-        $response = $pipeline(new ServerRequest(), new Last());
+        $response = $pipeline(new ServerRequest(), new Response(), new Last());
 
         $this->assertJsonStringEqualsJsonString(
             json_encode(['middleware-1' => 1, 'middleware-2' => 2]),

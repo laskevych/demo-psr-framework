@@ -22,10 +22,10 @@ class Pipeline
     }
 
 
-    public function __invoke(ServerRequestInterface $request, callable  $next): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable  $next): ResponseInterface
     {
         // Клонируем очередь, что бы не опустошить ее.
-        $delegate = new Next(clone $this->queue, $next);
+        $delegate = new Next(clone $this->queue, $response, $next);
         return $delegate($request);
     }
 

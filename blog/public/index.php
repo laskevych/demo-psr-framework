@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 use Aura\Router\RouterContainer;
@@ -39,13 +40,13 @@ $app->pipe(new RouteMiddleware($router));
  * Разделил RouterMiddleware на 2 класса.
  * Теперь есть возможность вставить промежуточных посредников.
  */
-$app->pipe(\App\Http\Middleware\AboutNotFoundMiddleware::class);
+//$app->pipe(\App\Http\Middleware\AboutNotFoundMiddleware::class);
 
 $app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-$response = $app->run($request);
+$response = $app->run($request, new \Zend\Diactoros\Response());
 
 ### Sending
 
