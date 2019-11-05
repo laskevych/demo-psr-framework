@@ -16,10 +16,11 @@ use App\Http\Middleware\{NotFoundHandler, ProfilerMiddleware, ErrorHandlerMiddle
 
 require dirname(__DIR__)."/vendor/autoload.php";
 
+### Configuration
+
+$container = new \Core\Container\Container();
+$container->set('debug', true);
 ### Initialization
-$params = [
-  'debug' => true
-];
 
 $aura = new RouterContainer();
 $routes = $aura->getMap();
@@ -32,7 +33,7 @@ $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver(new Response());
 $app = new Application($resolver, new NotFoundHandler());
 
-$app->pipe(new ErrorHandlerMiddleware($params['debug']));
+$app->pipe(new ErrorHandlerMiddleware($container->get('debug')));
 $app->pipe(ProfilerMiddleware::class);
 $app->pipe(new RouteMiddleware($router));
 
