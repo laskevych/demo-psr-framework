@@ -17,8 +17,14 @@ use Zend\Diactoros\ServerRequest;
 
 /** @todo Решить проблему */
 
-class MiddlewareResolverTest //extends TestCase
+class MiddlewareResolverTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->markTestIncomplete('Решить проблему');
+    }
+
     /**
      * @dataProvider getValidHandlers
      * @param $handler
