@@ -39,6 +39,35 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(\stdClass::class, $value);
     }
 
+    public function testSingleton(): void
+    {
+        $container = new Container();
+
+        $container->set($name = 'call_back', function () {
+            return new \stdClass();
+        });
+
+        self::assertNotNull($value1 = $container->get($name));
+        self::assertNotNull($value2 = $container->get($name));
+
+        self::assertSame($value1, $value2);
+    }
+
+    public function testContainerPass()
+    {
+        $container = new Container();
+
+        $container->set('param', $value = 15);
+        $container->set($name = 'call_back', function (Container $container) {
+            $obj = new \stdClass();
+            $obj->param = $container->get('param');
+            return $obj;
+        });
+
+        self::assertObjectHasAttribute('param', $obj = $container->get($name));
+        self::assertEquals($value, $obj->param);
+    }
+
     public function testNotFound(): void
     {
         $container = new Container();

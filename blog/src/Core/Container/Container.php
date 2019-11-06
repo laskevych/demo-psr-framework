@@ -7,6 +7,7 @@ namespace Core\Container;
 class Container
 {
     private $definitions = [];
+    private $results = [];
 
     public function set($name, $value)
     {
@@ -15,6 +16,9 @@ class Container
 
     public function get($name)
     {
+        if (array_key_exists($name, $this->results)) {
+            return $this->results[$name];
+        }
         if (!array_key_exists($name, $this->definitions)) {
             throw new ServiceNotFoundException("Undefined parameter {$name}");
         }
@@ -24,9 +28,11 @@ class Container
          */
         $definition = $this->definitions[$name];
         if ($definition instanceof \Closure) {
-            return $definition();
+            $this->results[$name] = $definition($this);
         } else {
-            return $definition;
+            $this->results[$name] = $definition;
         }
+
+        return $this->results[$name];
     }
 }
