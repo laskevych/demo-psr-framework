@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Container;
 
 use Core\Container\Container;
+use Core\Container\ServiceNotFoundException;
 use PHPUnit\Framework\TestCase;
 
-class TestContainer extends TestCase
+class ContainerTest extends TestCase
 {
     public function testSimpleFunction(): void
     {
@@ -26,11 +27,23 @@ class TestContainer extends TestCase
         self::assertEquals($value, $container->get($name));
     }
 
+    public function testCallback(): void
+    {
+        $container = new Container();
+
+        $container->set($name = 'call_back', function () {
+            return new \stdClass();
+        });
+
+        self::assertNotNull($value = $container->get($name));
+        self::assertInstanceOf(\stdClass::class, $value);
+    }
+
     public function testNotFound(): void
     {
         $container = new Container();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(ServiceNotFoundException::class);
 
         $container->get('test');
     }

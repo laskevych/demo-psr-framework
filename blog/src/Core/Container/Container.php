@@ -16,8 +16,17 @@ class Container
     public function get($name)
     {
         if (!array_key_exists($name, $this->definitions)) {
-            throw new \InvalidArgumentException("Undefined parameter {$name}");
+            throw new ServiceNotFoundException("Undefined parameter {$name}");
         }
-        return $this->definitions[$name];
+
+        /**
+         * Теперь можем обрабаывать анонимные функции
+         */
+        $definition = $this->definitions[$name];
+        if ($definition instanceof \Closure) {
+            return $definition();
+        } else {
+            return $definition;
+        }
     }
 }
