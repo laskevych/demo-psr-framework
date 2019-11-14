@@ -1,27 +1,27 @@
 version: '3'
 services:
-  blog-nginx:
+  framework-nginx:
     build:
-      context: ./blog/docker
+      context: psr-framework/docker
       dockerfile: nginx.docker
     volumes:
-      - ./blog:/app
+      - ./psr-framework:/app
     depends_on:
-      - blog-php-fpm
+      - framework-php-fpm
     ports:
       - "8090:80"
-  blog-php-fpm:
+  framework-php-fpm:
     build:
-      context: ./blog/docker
+      context: psr-framework/docker
       dockerfile: php-fpm.docker
     volumes:
-      - ./blog:/app
-  blog-php-cli:
+      - ./psr-framework:/app
+  framework-php-cli:
     build:
-      context: ./blog/docker
+      context: psr-framework/docker
       dockerfile: php-cli.docker
     volumes:
-      - ./blog:/app
+      - ./psr-framework:/app
       - composer:/root/.composer/cache
 
 volumes:

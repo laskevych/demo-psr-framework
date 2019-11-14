@@ -18,23 +18,23 @@ class RouterTest extends TestCase
 
         $map->get(
             $nameGet = 'blog_show',
-            $path = '/blog/{id}',
+            $path = '/psr-framework/{id}',
             $handlerGet = 'handler_get'
         )->tokens($tokens = ['id' => '\d+']);
 
         $map->post(
             $namePost = 'blog_edit',
-            $path = '/blog/edit/{id}',
+            $path = '/psr-framework/edit/{id}',
             $handlerPost = 'handler_post'
         );
 
         $router = new AuraRouterAdapter($aura);
 
-        $result = $router->match($this->buildRequest('GET', '/blog/45'));
+        $result = $router->match($this->buildRequest('GET', '/psr-framework/45'));
         self::assertEquals($nameGet, $result->getName());
         self::assertEquals($handlerGet, $result->getHandler());
 
-        $result = $router->match($this->buildRequest('POST', '/blog/edit/15'));
+        $result = $router->match($this->buildRequest('POST', '/psr-framework/edit/15'));
         self::assertEquals($namePost, $result->getName());
         self::assertEquals($handlerPost, $result->getHandler());
     }
@@ -45,8 +45,8 @@ class RouterTest extends TestCase
         $map = $aura->getMap();
 
         $map->get(
-            $nameGet = 'blog',
-            $path = '/blog',
+            $nameGet = 'psr-framework',
+            $path = '/psr-framework',
             $handlerGet = 'handler_get'
         );
 
@@ -54,7 +54,7 @@ class RouterTest extends TestCase
 
         $this->expectException(RequestNotMatchedException::class);
 
-        $router->match($this->buildRequest('DELETE', 'blog'));
+        $router->match($this->buildRequest('DELETE', 'psr-framework'));
     }
 
     public function testReturnCorrectArgument(): void
@@ -64,13 +64,13 @@ class RouterTest extends TestCase
 
         $map->get(
             $nameGet = 'blog_show',
-            $path = '/blog/{id}',
+            $path = '/psr-framework/{id}',
             $handlerGet = 'handler_get_show'
         )->tokens(['id' => '\d+']);
 
         $router = new AuraRouterAdapter($aura);
 
-        $result = $router->match($this->buildRequest('GET', '/blog/7'));
+        $result = $router->match($this->buildRequest('GET', '/psr-framework/7'));
 
         self::assertEquals($nameGet, $result->getName());
         self::assertEquals(['id' => '7'], $result->getAttributes());
@@ -83,14 +83,14 @@ class RouterTest extends TestCase
 
         $map->get(
             $nameGet = 'blog_show',
-            $path = '/blog/{id}',
+            $path = '/psr-framework/{id}',
             $handlerGet = 'handler_get'
         )->tokens(['id' => '\d+']);
 
         $router = new AuraRouterAdapter($aura);
 
         $url = $router->generate('blog_show', ['id' => 15]);
-        self::assertEquals('/blog/15', $url);
+        self::assertEquals('/psr-framework/15', $url);
 
     }
 
@@ -101,14 +101,14 @@ class RouterTest extends TestCase
 
         $map->get(
             $nameGet = 'blog_show',
-            $path = '/blog/{id}',
+            $path = '/psr-framework/{id}',
             $handlerGet = 'handler_get'
         )->tokens(['id' => '\d+']);
 
         $router = new AuraRouterAdapter($aura);
 
         $this->expectException(RouteNotFoundException::class);
-        $result = $router->generate('blog', ['id' => 15]);
+        $result = $router->generate('psr-framework', ['id' => 15]);
     }
 
     private function buildRequest(string $method, string $uri)

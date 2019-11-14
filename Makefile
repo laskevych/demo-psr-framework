@@ -1,8 +1,8 @@
 up: docker-up
 down: docker-dowm
 init: docker-dowm docker-pull docker-build docker-up
-test: blog-test
-test-cache: blog-test-cache
+test: framework-test
+test-cache: framework-test-cache
 
 docker-up:
 	docker-compose up -d
@@ -16,13 +16,13 @@ docker-build:
 docker-pull:
 	docker-compose pull
 
-blog-init: blog-composer-install
+framework-init: framework-composer-install
 
-blog-composer-install:
-	docker-compose run --rm blog-php-cli composer install
+framework-composer-install:
+	docker-compose run --rm framework-php-cli composer install
 
-blog-test:
-	docker-compose run --rm blog-php-cli php vendor/bin/phpunit
+framework-test:
+	docker-compose run --rm framework-php-cli php vendor/bin/phpunit
 
-blog-test-cache:
-	docker-compose run --rm blog-php-cli rm -f .phpunit.result.cache
+framework-test-cache:
+	docker-compose run --rm framework-php-cli rm -f .phpunit.result.cache
